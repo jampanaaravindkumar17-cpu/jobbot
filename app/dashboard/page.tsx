@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Job = {
   id: string;
@@ -28,6 +29,7 @@ const navItems = [
 ];
 
 export default function Dashboard() {
+  const router = useRouter();
   const [autoApply, setAutoApply] = useState(false);
 
   const [role, setRole] = useState("");
@@ -131,6 +133,7 @@ export default function Dashboard() {
             {navItems.map((item) => (
               <button
                 key={item.label}
+                onClick={() => item.label === "Resume" && router.push("/resume")}
                 className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all ${
                   item.active
                     ? "bg-cyan-400/10 text-cyan-400"
