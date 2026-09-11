@@ -2,12 +2,22 @@
 
 import { useState } from "react";
 
-const stats = [
-  { label: "Jobs Found", value: "0", icon: "⌕" },
-  { label: "High Matches", value: "0", icon: "★" },
-  { label: "Applications", value: "0", icon: "↗" },
-  { label: "Interviews", value: "0", icon: "✓" },
-];
+type Job = {
+  id: string;
+  title: string;
+  company?: {
+    display_name?: string;
+  };
+  location?: {
+    display_name?: string;
+  };
+  description?: string;
+  redirect_url?: string;
+  salary_min?: number;
+  salary_max?: number;
+  contract_type?: string;
+  created?: string;
+};
 
 const navItems = [
   { label: "Dashboard", icon: "⌂", active: true },
@@ -19,6 +29,68 @@ const navItems = [
 
 export default function Dashboard() {
   const [autoApply, setAutoApply] = useState(false);
+
+  const [role, setRole] = useState("");
+  const [location, setLocation] = useState("");
+
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const searchJobs = async () => {
+    if (!role.trim()) {
+      setError("Please enter a target job role.");
+      return;
+    }
+
+    if (!location.trim()) {
+      setError("Please enter a location.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch(
+        `/api/jobs/search?role=${encodeURIComponent(
+          role
+        )}&location=${encodeURIComponent(location)}`
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Job search failed.");
+      }
+
+      setJobs(data.results || []);
+    } catch (err) {
+      console.error(err);
+      setJobs([]);
+      setError("Unable to find jobs. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatSalary = (job: Job) => {
+    if (job.salary_min && job.salary_max) {
+      return `£${Math.round(job.salary_min).toLocaleString()} - £${Math.round(
+        job.salary_max
+      ).toLocaleString()}`;
+    }
+
+    if (job.salary_min) {
+      return `From £${Math.round(job.salary_min).toLocaleString()}`;
+    }
+
+    if (job.salary_max) {
+      return `Up to £${Math.round(job.salary_max).toLocaleString()}`;
+    }
+
+    return "Salary not specified";
+  };
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -73,7 +145,7 @@ export default function Dashboard() {
             ))}
           </nav>
 
-          {/* Auto Apply Card */}
+          {/* Auto Apply */}
           <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
             <p className="text-sm font-semibold">Auto Apply</p>
 
@@ -105,7 +177,6 @@ export default function Dashboard() {
 
           {/* Header */}
           <header className="flex h-20 items-center justify-between border-b border-white/10 px-5 sm:px-8">
-
             <div>
               <h1 className="text-xl font-semibold">
                 Dashboard
@@ -118,12 +189,10 @@ export default function Dashboard() {
 
             <div className="flex items-center gap-3">
 
-              {/* Notification */}
               <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-400 transition hover:bg-white/[0.08] hover:text-white">
                 ♢
               </button>
 
-              {/* User */}
               <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-xs font-bold">
                   A
@@ -133,6 +202,7 @@ export default function Dashboard() {
                   <p className="text-xs font-medium">
                     Job Seeker
                   </p>
+
                   <p className="text-[10px] text-slate-500">
                     Free Plan
                   </p>
@@ -160,6 +230,7 @@ export default function Dashboard() {
 
               <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
 
+                {/* Role */}
                 <div>
                   <label className="mb-2 block text-xs font-medium text-slate-400">
                     Target role
@@ -167,11 +238,19 @@ export default function Dashboard() {
 
                   <input
                     type="text"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        searchJobs();
+                      }
+                    }}
                     placeholder="e.g. VLSI Design Engineer"
                     className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-cyan-400/50 focus:ring-4 focus:ring-cyan-400/10"
                   />
                 </div>
 
+                {/* Location */}
                 <div>
                   <label className="mb-2 block text-xs font-medium text-slate-400">
                     Location
@@ -179,67 +258,135 @@ export default function Dashboard() {
 
                   <input
                     type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        searchJobs();
+                      }
+                    }}
                     placeholder="e.g. Hyderabad, Bangalore"
                     className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-600 focus:border-cyan-400/50 focus:ring-4 focus:ring-cyan-400/10"
                   />
                 </div>
 
+                {/* Search Button */}
                 <div className="flex items-end">
-                  <button className="w-full rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 px-6 py-3 text-sm font-semibold shadow-lg shadow-blue-500/20 transition hover:-translate-y-0.5 hover:shadow-cyan-500/20 md:w-auto">
-                    Search Jobs
+                  <button
+                    onClick={searchJobs}
+                    disabled={loading}
+                    className="w-full rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 px-6 py-3 text-sm font-semibold shadow-lg shadow-blue-500/20 transition hover:-translate-y-0.5 hover:shadow-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
+                  >
+                    {loading ? "Searching..." : "Search Jobs"}
                   </button>
                 </div>
 
               </div>
+
+              {/* Error */}
+              {error && (
+                <p className="mt-3 text-xs text-red-400">
+                  {error}
+                </p>
+              )}
             </div>
 
             {/* Stats */}
             <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-              {stats.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/20"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl text-cyan-400">
-                      {stat.icon}
-                    </span>
 
-                    <span className="text-2xl font-bold">
-                      {stat.value}
-                    </span>
-                  </div>
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/20">
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl text-cyan-400">
+                    ⌕
+                  </span>
 
-                  <p className="mt-3 text-xs text-slate-500">
-                    {stat.label}
-                  </p>
+                  <span className="text-2xl font-bold">
+                    {jobs.length}
+                  </span>
                 </div>
-              ))}
+
+                <p className="mt-3 text-xs text-slate-500">
+                  Jobs Found
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/20">
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl text-cyan-400">
+                    ★
+                  </span>
+
+                  <span className="text-2xl font-bold">
+                    -
+                  </span>
+                </div>
+
+                <p className="mt-3 text-xs text-slate-500">
+                  High Matches
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/20">
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl text-cyan-400">
+                    ↗
+                  </span>
+
+                  <span className="text-2xl font-bold">
+                    0
+                  </span>
+                </div>
+
+                <p className="mt-3 text-xs text-slate-500">
+                  Applications
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/20">
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl text-cyan-400">
+                    ✓
+                  </span>
+
+                  <span className="text-2xl font-bold">
+                    0
+                  </span>
+                </div>
+
+                <p className="mt-3 text-xs text-slate-500">
+                  Interviews
+                </p>
+              </div>
+
             </div>
 
-            {/* Two columns */}
-            <div className="grid gap-6 xl:grid-cols-3">
+            {/* Jobs */}
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04]">
 
-              {/* Recent Jobs */}
-              <div className="xl:col-span-2 rounded-2xl border border-white/10 bg-white/[0.04]">
+              <div className="flex items-center justify-between border-b border-white/10 p-5">
 
-                <div className="flex items-center justify-between border-b border-white/10 p-5">
-                  <div>
-                    <h3 className="font-semibold">
-                      Recommended Jobs
-                    </h3>
+                <div>
+                  <h3 className="font-semibold">
+                    Recommended Jobs
+                  </h3>
 
-                    <p className="mt-1 text-xs text-slate-500">
-                      Jobs matching your profile
-                    </p>
-                  </div>
-
-                  <button className="text-xs font-medium text-cyan-400 hover:text-cyan-300">
-                    View all
-                  </button>
+                  <p className="mt-1 text-xs text-slate-500">
+                    Real jobs matching your search
+                  </p>
                 </div>
 
+                {jobs.length > 0 && (
+                  <span className="text-xs text-cyan-400">
+                    {jobs.length} jobs
+                  </span>
+                )}
+
+              </div>
+
+              {/* No jobs */}
+              {jobs.length === 0 && !loading ? (
                 <div className="flex min-h-64 items-center justify-center p-8 text-center">
+
                   <div>
                     <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/[0.05] text-2xl text-slate-500">
                       ⌕
@@ -250,52 +397,96 @@ export default function Dashboard() {
                     </h4>
 
                     <p className="mx-auto mt-2 max-w-sm text-xs leading-5 text-slate-500">
-                      Search for a role above and JobBot will start finding
-                      relevant opportunities.
+                      Enter your target role and location above to find real
+                      job opportunities.
                     </p>
-
-                    <button className="mt-5 rounded-lg border border-cyan-400/20 bg-cyan-400/5 px-4 py-2 text-xs font-medium text-cyan-400 hover:bg-cyan-400/10">
-                      Start Job Search
-                    </button>
                   </div>
+
                 </div>
-              </div>
+              ) : (
+                <div className="divide-y divide-white/10">
 
-              {/* Application Activity */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.04]">
+                  {jobs.map((job) => (
+                    <div
+                      key={job.id}
+                      className="p-5 transition hover:bg-white/[0.03]"
+                    >
 
-                <div className="border-b border-white/10 p-5">
-                  <h3 className="font-semibold">
-                    Application Activity
-                  </h3>
+                      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-                  <p className="mt-1 text-xs text-slate-500">
-                    Your latest activity
-                  </p>
-                </div>
+                        <div className="min-w-0">
 
-                <div className="flex min-h-64 items-center justify-center p-8 text-center">
-                  <div>
-                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/[0.05] text-2xl text-slate-500">
-                      ↗
+                          <h4 className="text-sm font-semibold text-white">
+                            {job.title}
+                          </h4>
+
+                          <p className="mt-1 text-xs text-cyan-400">
+                            {job.company?.display_name ||
+                              "Company not specified"}
+                          </p>
+
+                          <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-500">
+
+                            <span>
+                              📍{" "}
+                              {job.location?.display_name ||
+                                "Location not specified"}
+                            </span>
+
+                            <span>
+                              💰 {formatSalary(job)}
+                            </span>
+
+                            {job.contract_type && (
+                              <span>
+                                💼 {job.contract_type}
+                              </span>
+                            )}
+
+                          </div>
+
+                          {job.description && (
+                            <p className="mt-3 line-clamp-2 max-w-3xl text-xs leading-5 text-slate-500">
+                              {job.description.replace(/<[^>]*>/g, "")}
+                            </p>
+                          )}
+
+                        </div>
+
+                        <div className="shrink-0">
+
+                          {job.redirect_url ? (
+                            <a
+                              href={job.redirect_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex rounded-lg bg-cyan-400/10 px-4 py-2 text-xs font-semibold text-cyan-400 transition hover:bg-cyan-400/20"
+                            >
+                              View & Apply
+                            </a>
+                          ) : (
+                            <span className="text-xs text-slate-600">
+                              Application link unavailable
+                            </span>
+                          )}
+
+                        </div>
+
+                      </div>
+
                     </div>
+                  ))}
 
-                    <p className="mt-4 text-sm font-medium">
-                      No applications
-                    </p>
-
-                    <p className="mt-2 text-xs leading-5 text-slate-500">
-                      Your application history will appear here.
-                    </p>
-                  </div>
                 </div>
-              </div>
+              )}
 
             </div>
 
             {/* Mobile Auto Apply */}
             <div className="mt-6 rounded-2xl border border-cyan-400/10 bg-cyan-400/[0.03] p-5 lg:hidden">
+
               <div className="flex items-center justify-between">
+
                 <div>
                   <p className="text-sm font-semibold">
                     Auto Apply
@@ -316,7 +507,9 @@ export default function Dashboard() {
                 >
                   {autoApply ? "Enabled" : "Disabled"}
                 </button>
+
               </div>
+
             </div>
 
           </div>
