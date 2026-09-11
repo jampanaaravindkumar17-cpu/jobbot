@@ -101,10 +101,8 @@ export default function Dashboard() {
       </div>
 
       <div className="relative flex min-h-screen">
-
         {/* Sidebar */}
         <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-white/[0.02] px-5 py-6 lg:block">
-
           {/* Logo */}
           <div className="mb-10 flex items-center gap-3 px-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 shadow-lg shadow-blue-500/20">
@@ -174,13 +172,10 @@ export default function Dashboard() {
 
         {/* Main */}
         <section className="flex-1">
-
           {/* Header */}
           <header className="flex h-20 items-center justify-between border-b border-white/10 px-5 sm:px-8">
             <div>
-              <h1 className="text-xl font-semibold">
-                Dashboard
-              </h1>
+              <h1 className="text-xl font-semibold">Dashboard</h1>
 
               <p className="hidden text-xs text-slate-500 sm:block">
                 Your job search at a glance
@@ -188,7 +183,6 @@ export default function Dashboard() {
             </div>
 
             <div className="flex items-center gap-3">
-
               <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-400 transition hover:bg-white/[0.08] hover:text-white">
                 ♢
               </button>
@@ -199,13 +193,9 @@ export default function Dashboard() {
                 </div>
 
                 <div className="hidden sm:block">
-                  <p className="text-xs font-medium">
-                    Job Seeker
-                  </p>
+                  <p className="text-xs font-medium">Job Seeker</p>
 
-                  <p className="text-[10px] text-slate-500">
-                    Free Plan
-                  </p>
+                  <p className="text-[10px] text-slate-500">Free Plan</p>
                 </div>
               </div>
             </div>
@@ -213,7 +203,6 @@ export default function Dashboard() {
 
           {/* Content */}
           <div className="mx-auto max-w-7xl p-5 sm:p-8">
-
             {/* Welcome */}
             <div className="mb-8">
               <h2 className="text-2xl font-bold sm:text-3xl">
@@ -227,9 +216,7 @@ export default function Dashboard() {
 
             {/* Search Box */}
             <div className="mb-8 rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-5">
-
               <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
-
                 {/* Role */}
                 <div>
                   <label className="mb-2 block text-xs font-medium text-slate-400">
@@ -280,95 +267,62 @@ export default function Dashboard() {
                     {loading ? "Searching..." : "Search Jobs"}
                   </button>
                 </div>
-
               </div>
 
               {/* Error */}
               {error && (
-                <p className="mt-3 text-xs text-red-400">
-                  {error}
-                </p>
+                <p className="mt-3 text-xs text-red-400">{error}</p>
               )}
             </div>
 
             {/* Stats */}
             <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/20">
                 <div className="flex items-center justify-between">
-                  <span className="text-2xl text-cyan-400">
-                    ⌕
-                  </span>
+                  <span className="text-2xl text-cyan-400">⌕</span>
 
-                  <span className="text-2xl font-bold">
-                    {jobs.length}
-                  </span>
+                  <span className="text-2xl font-bold">{jobs.length}</span>
                 </div>
 
-                <p className="mt-3 text-xs text-slate-500">
-                  Jobs Found
-                </p>
+                <p className="mt-3 text-xs text-slate-500">Jobs Found</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/20">
                 <div className="flex items-center justify-between">
-                  <span className="text-2xl text-cyan-400">
-                    ★
-                  </span>
+                  <span className="text-2xl text-cyan-400">★</span>
 
-                  <span className="text-2xl font-bold">
-                    -
-                  </span>
+                  <span className="text-2xl font-bold">-</span>
                 </div>
 
-                <p className="mt-3 text-xs text-slate-500">
-                  High Matches
-                </p>
+                <p className="mt-3 text-xs text-slate-500">High Matches</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/20">
                 <div className="flex items-center justify-between">
-                  <span className="text-2xl text-cyan-400">
-                    ↗
-                  </span>
+                  <span className="text-2xl text-cyan-400">↗</span>
 
-                  <span className="text-2xl font-bold">
-                    0
-                  </span>
+                  <span className="text-2xl font-bold">0</span>
                 </div>
 
-                <p className="mt-3 text-xs text-slate-500">
-                  Applications
-                </p>
+                <p className="mt-3 text-xs text-slate-500">Applications</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/20">
                 <div className="flex items-center justify-between">
-                  <span className="text-2xl text-cyan-400">
-                    ✓
-                  </span>
+                  <span className="text-2xl text-cyan-400">✓</span>
 
-                  <span className="text-2xl font-bold">
-                    0
-                  </span>
+                  <span className="text-2xl font-bold">0</span>
                 </div>
 
-                <p className="mt-3 text-xs text-slate-500">
-                  Interviews
-                </p>
+                <p className="mt-3 text-xs text-slate-500">Interviews</p>
               </div>
-
             </div>
 
             {/* Jobs */}
             <div className="rounded-2xl border border-white/10 bg-white/[0.04]">
-
               <div className="flex items-center justify-between border-b border-white/10 p-5">
-
                 <div>
-                  <h3 className="font-semibold">
-                    Recommended Jobs
-                  </h3>
+                  <h3 className="font-semibold">Recommended Jobs</h3>
 
                   <p className="mt-1 text-xs text-slate-500">
                     Real jobs matching your search
@@ -380,13 +334,11 @@ export default function Dashboard() {
                     {jobs.length} jobs
                   </span>
                 )}
-
               </div>
 
               {/* No jobs */}
               {jobs.length === 0 && !loading ? (
                 <div className="flex min-h-64 items-center justify-center p-8 text-center">
-
                   <div>
                     <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/[0.05] text-2xl text-slate-500">
                       ⌕
@@ -401,21 +353,16 @@ export default function Dashboard() {
                       job opportunities.
                     </p>
                   </div>
-
                 </div>
               ) : (
                 <div className="divide-y divide-white/10">
-
                   {jobs.map((job) => (
                     <div
                       key={job.id}
                       className="p-5 transition hover:bg-white/[0.03]"
                     >
-
                       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
                         <div className="min-w-0">
-
                           <h4 className="text-sm font-semibold text-white">
                             {job.title}
                           </h4>
@@ -426,23 +373,17 @@ export default function Dashboard() {
                           </p>
 
                           <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-500">
-
                             <span>
                               📍{" "}
                               {job.location?.display_name ||
                                 "Location not specified"}
                             </span>
 
-                            <span>
-                              💰 {formatSalary(job)}
-                            </span>
+                            <span>💰 {formatSalary(job)}</span>
 
                             {job.contract_type && (
-                              <span>
-                                💼 {job.contract_type}
-                              </span>
+                              <span>💼 {job.contract_type}</span>
                             )}
-
                           </div>
 
                           {job.description && (
@@ -450,11 +391,9 @@ export default function Dashboard() {
                               {job.description.replace(/<[^>]*>/g, "")}
                             </p>
                           )}
-
                         </div>
 
                         <div className="shrink-0">
-
                           {job.redirect_url ? (
                             <a
                               href={job.redirect_url}
@@ -469,28 +408,19 @@ export default function Dashboard() {
                               Application link unavailable
                             </span>
                           )}
-
                         </div>
-
                       </div>
-
                     </div>
                   ))}
-
                 </div>
               )}
-
             </div>
 
             {/* Mobile Auto Apply */}
             <div className="mt-6 rounded-2xl border border-cyan-400/10 bg-cyan-400/[0.03] p-5 lg:hidden">
-
               <div className="flex items-center justify-between">
-
                 <div>
-                  <p className="text-sm font-semibold">
-                    Auto Apply
-                  </p>
+                  <p className="text-sm font-semibold">Auto Apply</p>
 
                   <p className="mt-1 text-xs text-slate-500">
                     Apply automatically to eligible jobs.
@@ -507,11 +437,13 @@ export default function Dashboard() {
                 >
                   {autoApply ? "Enabled" : "Disabled"}
                 </button>
-
               </div>
-
             </div>
 
+            {/* Copyright */}
+            <p className="mt-8 pb-4 text-center text-xs text-slate-600">
+              © 2026 JobBot by JAMPANA ARAVIND KUMAR
+            </p>
           </div>
         </section>
       </div>
