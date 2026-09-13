@@ -1,26 +1,73 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #172033;
+  --app-bg: #f7f9fc;
+  --sidebar: rgba(255, 255, 255, 0.92);
+  --surface: rgba(255, 255, 255, 0.92);
+  --surface-subtle: rgba(248, 250, 252, 0.76);
+  --surface-hover: rgba(15, 23, 42, 0.055);
+  --border: rgba(15, 23, 42, 0.09);
+  --border-strong: rgba(15, 23, 42, 0.16);
+  --text: #172033;
+  --text-muted: #657087;
+  --text-faint: #97a0b1;
+  --brand: #0b99bb;
+  --brand-soft: rgba(9, 158, 193, 0.11);
+  --card-shadow: 0 10px 30px rgba(23, 32, 51, 0.035);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.theme-light {
+  --background: #f8fafc;
+  --foreground: #172033;
+  --app-bg: #f7f9fc;
+  --sidebar: rgba(255, 255, 255, 0.92);
+  --surface: rgba(255, 255, 255, 0.92);
+  --surface-subtle: rgba(248, 250, 252, 0.76);
+  --surface-hover: rgba(15, 23, 42, 0.055);
+  --border: rgba(15, 23, 42, 0.09);
+  --border-strong: rgba(15, 23, 42, 0.16);
+  --text: #172033;
+  --text-muted: #657087;
+  --text-faint: #97a0b1;
+  --brand: #0b99bb;
+  --brand-soft: rgba(9, 158, 193, 0.11);
+  --card-shadow: 0 10px 30px rgba(23, 32, 51, 0.035);
+}
+
+:root:not(.theme-light) {
+  --background: #0b1120;
+  --foreground: #e8edf8;
+  --app-bg: #0b1120;
+  --sidebar: rgba(13, 20, 35, 0.94);
+  --surface: rgba(19, 29, 48, 0.82);
+  --surface-subtle: rgba(19, 29, 48, 0.45);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  --border: rgba(180, 197, 227, 0.11);
+  --border-strong: rgba(180, 197, 227, 0.2);
+  --text: #edf2fc;
+  --text-muted: #a3afc4;
+  --text-faint: #728098;
+  --brand: #34cce9;
+  --brand-soft: rgba(52, 204, 233, 0.11);
+  --card-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--app-bg);
+  color: var(--text);
   font-family: Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
 }
+
+* { box-sizing: border-box; }
+
+::selection { background: var(--brand-soft); color: var(--text); }

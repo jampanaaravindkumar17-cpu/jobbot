@@ -1,0 +1,3 @@
+export default function Loading() {
+  return <div className="min-h-screen bg-[var(--app-bg)] pl-0 pt-16 lg:pl-[264px]"><div className="mx-auto max-w-7xl animate-pulse space-y-7 px-5 py-8 sm:px-8 lg:px-10"><div className="h-7 w-56 rounded-lg bg-[var(--surface-hover)]" /><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{Array.from({ length: 4 }).map((_, index) => <div key={index} className="h-32 rounded-2xl bg-[var(--surface-hover)]" />)}</div><div className="grid gap-6 xl:grid-cols-2"><div className="h-64 rounded-2xl bg-[var(--surface-hover)]" /><div className="h-64 rounded-2xl bg-[var(--surface-hover)]" /></div></div></div>;
+}
